@@ -15728,6 +15728,196 @@ body {
   background: #080f1e;
 }
 
+/* =========================================================
+   V96 — 인게임 도전권 배너 (헤더 우측 도전권 카운터 대체)
+   ========================================================= */
+.ingame-chances-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #FFF4F0 0%, #FFE8E0 100%);
+  border: 1px solid #FFC9B8;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px -4px rgba(255, 107, 90, 0.18);
+}
+.ingame-chances-banner .igc-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  letter-spacing: 0.02em;
+}
+.ingame-chances-banner .igc-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  font-family: 'Courier New', monospace;
+  font-weight: 800;
+}
+.ingame-chances-banner .igc-num {
+  font-size: 22px;
+  color: var(--coral);
+  line-height: 1;
+}
+.ingame-chances-banner .igc-slash {
+  font-size: 16px;
+  color: var(--ink-3);
+  margin: 0 2px;
+  line-height: 1;
+}
+.ingame-chances-banner .igc-total {
+  font-size: 16px;
+  color: var(--ink-3);
+  line-height: 1;
+}
+.ingame-chances-banner .igc-warning {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #C1352D;
+  background: rgba(193, 53, 45, 0.08);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* V97 — 도전권 소진 시 게임 비활성화 오버레이 */
+.game-disabled-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(45, 27, 61, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 12px;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+.game-disabled-overlay .gdo-card {
+  background: #fff;
+  padding: 32px 44px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 24px 60px -8px rgba(0, 0, 0, 0.45);
+  max-width: 360px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.game-disabled-overlay .gdo-icon {
+  font-size: 44px;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.game-disabled-overlay .gdo-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.game-disabled-overlay .gdo-sub {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+@media (max-width: 600px) {
+  .game-disabled-overlay .gdo-card {
+    padding: 24px 28px;
+    max-width: 280px;
+  }
+  .game-disabled-overlay .gdo-icon { font-size: 36px; }
+  .game-disabled-overlay .gdo-title { font-size: 15px; }
+  .game-disabled-overlay .gdo-sub { font-size: 12.5px; }
+}
+
+/* =========================================================
+   V95 — 태블릿/모바일 반응형 (가로세로 & 테트리스)
+   ========================================================= */
+
+/* 태블릿 이하: 게임 + 랭킹을 세로로 스택, iframe 폭 100% */
+@media (max-width: 1080px) {
+  .cw-layout-v86 {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .tetris-game-v87 .tetris-layout-v87 {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  /* iframe column min-height 조정 */
+  .cw-iframe-col {
+    min-height: 720px;
+  }
+  .cw-iframe-v86 {
+    height: 920px;
+  }
+  /* 랭킹 패널이 아래로 갈 때는 더 컴팩트하게 */
+  .cw-rank-col,
+  .cw-rank-col-v86 {
+    position: static !important;
+    width: 100%;
+    max-width: 100%;
+  }
+  .rank-table-v87 {
+    max-height: 320px;
+  }
+  /* 게임 헤더도 좀 더 컴팩트하게 */
+  .game-view .game-header {
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
+  .game-view .game-header-info h2 {
+    font-size: 17px !important;
+  }
+}
+
+/* 좁은 태블릿 / 큰 모바일 (~768px 이하) */
+@media (max-width: 768px) {
+  .cw-iframe-v86 {
+    height: 880px;
+  }
+  .tetris-game-v87 .tetris-iframe {
+    height: 680px;
+  }
+  /* 게임 카드 메뉴: 1열 또는 2열로 */
+  .game-menu-cards {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* 모바일 (~600px 이하) */
+@media (max-width: 600px) {
+  .cw-iframe-col {
+    min-height: 680px;
+  }
+  .cw-iframe-v86 {
+    height: 820px;
+  }
+  .tetris-game-v87 .tetris-iframe {
+    height: 640px;
+  }
+  .game-menu-cards {
+    grid-template-columns: 1fr !important;
+  }
+  /* 게임 헤더 — 도전권 카운터를 헤더 정보 아래로 */
+  .game-chances {
+    margin-left: auto !important;
+  }
+  .game-view .game-header-info h2 {
+    font-size: 15.5px !important;
+  }
+  .game-view .game-header-info p {
+    font-size: 11.5px !important;
+  }
+  /* 랭킹 행 폰트 살짝 축소 */
+  .rank-row-v87 {
+    font-size: 11.5px !important;
+    padding: 6px 8px !important;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -16405,7 +16595,7 @@ function PickerPanel() {
       return;
     }
     if (chances <= 0) {
-      if (window.showToast) window.showToast("오늘 스티커 붙이기를 완료하셨습니다. 내일 다시 가능합니다.");
+      if (window.showToast) window.showToast("오늘 스티커 보내기를 완료하셨습니다. 내일 다시 가능합니다.");
       return;
     }
     if (isSpinning) return;
@@ -16586,7 +16776,7 @@ function PickerPanel() {
                 onClick={submitAll}
                 disabled={readyCount === 0}
               >
-                {allDone ? "전달 완료 ✓" : `스티커 붙이기${readyCount > 0 ? ` (${readyCount})` : ''}`}
+                {allDone ? "전달 완료 ✓" : `스티커 보내기${readyCount > 0 ? ` (${readyCount})` : ''}`}
               </button>
             </div>
           )}
@@ -16836,8 +17026,10 @@ h1{font-size:22px;font-weight:700;margin-bottom:6px;}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#555;line-height:1.4;white-space:nowrap;}
 .legend-icon{font-size:12px;flex-shrink:0;width:16px;text-align:center;}
 
-@media(max-width:680px){body{--cell:28px}.letter{font-size:14px}.legend{flex-basis:100%}}
-@media(max-width:520px){body{padding:14px;--cell:23px}.clues{grid-template-columns:1fr}.letter{font-size:12px}.num{font-size:7px}}
+@media(max-width:900px){.board-row{flex-direction:column}.legend{flex-basis:100%!important;min-width:0!important;max-width:none!important;width:100%}}
+@media(max-width:680px){body{--cell:26px;padding:6px 4px}.letter{font-size:14px}.legend{flex-basis:100%}}
+@media(max-width:520px){body{padding:6px 4px;--cell:22px}.clues{grid-template-columns:1fr}.letter{font-size:12px}.num{font-size:7px}.cr{font-size:11.5px;padding:4px 5px}}
+@media(max-width:400px){body{--cell:19px}.letter{font-size:11px}.num{font-size:6px}}
 </style>
 </head>
 <body>
@@ -16855,7 +17047,6 @@ h1{font-size:22px;font-weight:700;margin-bottom:6px;}
   <div class="board-wrap">
     <div class="grid" id="grid"></div>
     <div class="btns">
-      <button onclick="checkAll()">정답 확인</button>
       <button onclick="revealAll()">정답 보기</button>
       <button onclick="resetAll()">다시 시작</button>
     </div>
@@ -17389,6 +17580,8 @@ function revealAll(){
 }
 
 function resetAll(){
+  // 부모(React)에 재시작 통지 — 도전권 1회 차감 트리거
+  try { window.parent.postMessage({type:'crossword_restart_click'}, '*'); } catch(e) {}
   doneWords.clear();
   for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
     userGrid[r][c]='';
@@ -17431,6 +17624,11 @@ function CrosswordGame({ onExit, chances, useChance }) {
     const blob = new Blob([CROSSWORD_HTML], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     setIframeUrl(url);
+    // Mission #4 (플레이 하기) — 첫 진입 시 1회 포인트 적립
+    if (typeof window.bumpMission === "function" && !window.__crosswordAwardedToday) {
+      window.bumpMission(4, 1);
+      window.__crosswordAwardedToday = true;
+    }
     return () => URL.revokeObjectURL(url);
   }, []);
 
@@ -17453,10 +17651,12 @@ function CrosswordGame({ onExit, chances, useChance }) {
     return () => clearInterval(id);
   }, [running, finished]);
 
-  // Listen for completion event from iframe (postMessage)
+  // Listen for events from iframe (postMessage)
   useEffect(() => {
     const onMsg = (e) => {
-      if (e.data && e.data.type === 'crossword_complete') {
+      if (!e.data) return;
+      // 완성 이벤트
+      if (e.data.type === 'crossword_complete') {
         if (running && !finished) {
           setRunning(false);
           setFinished(true);
@@ -17470,10 +17670,16 @@ function CrosswordGame({ onExit, chances, useChance }) {
           if (window.showToast) window.showToast(`완성! +${final}P`);
         }
       }
+      // 다시 시작 이벤트 — 도전권 1회 차감
+      if (e.data.type === 'crossword_restart_click') {
+        if (chances > 0 && useChance) {
+          useChance();
+        }
+      }
     };
     window.addEventListener('message', onMsg);
     return () => window.removeEventListener('message', onMsg);
-  }, [running, finished, elapsed]);
+  }, [running, finished, elapsed, chances, useChance]);
 
   const startGame = () => {
     if (chances <= 0 || usedChance) return;
@@ -17513,8 +17719,20 @@ function CrosswordGame({ onExit, chances, useChance }) {
         hideChances={true}
       />
 
+      <div className="ingame-chances-banner">
+        <span className="igc-label">남은 도전권</span>
+        <span className="igc-count">
+          <span className="igc-num">{chances}</span>
+          <span className="igc-slash">/</span>
+          <span className="igc-total">3</span>
+        </span>
+        {chances <= 0 && (
+          <span className="igc-warning">⏰ 오늘 도전권을 모두 사용했어요</span>
+        )}
+      </div>
+
       <div className="cw-layout-v86">
-        <div className="cw-iframe-col">
+        <div className="cw-iframe-col" style={{position: 'relative'}}>
           {iframeUrl && (
             <iframe
               key={iframeUrl}
@@ -17522,6 +17740,15 @@ function CrosswordGame({ onExit, chances, useChance }) {
               src={iframeUrl}
               title="컬처 가로세로"
             />
+          )}
+          {chances <= 0 && (
+            <div className="game-disabled-overlay">
+              <div className="gdo-card">
+                <div className="gdo-icon">⏰</div>
+                <div className="gdo-title">오늘의 도전권을 모두 사용했어요</div>
+                <div className="gdo-sub">내일 다시 도전해주세요!</div>
+              </div>
+            </div>
           )}
         </div>
         <aside className="cw-rank-col cw-rank-col-v86">
@@ -17852,7 +18079,13 @@ function floatScore(text,row){
   document.body.appendChild(el);
   setTimeout(function(){el.remove();},1250);
 }
-function gameOver(){running=false;clearInterval(dropT);var el=document.getElementById('effect-overlay');el.style.pointerEvents='auto';el.innerHTML='<div class="effect-text" style="color:#ff4444;font-size:clamp(24px,5vw,38px);line-height:1.5;animation:none;opacity:1;background:rgba(5,10,25,.92);border-radius:14px;padding:28px 44px;border:1.5px solid #ff4444;">GAME OVER<br><span style="font-size:clamp(15px,3vw,22px);color:#ffe066;">Score: '+score.toLocaleString()+'</span><br><button onclick="window.startGame()" style="margin-top:14px;background:linear-gradient(135deg,#1a5ad0,#3a8aff);color:#fff;border:none;border-radius:8px;padding:11px 32px;font-size:15px;font-weight:800;cursor:pointer;font-family:Noto Sans KR,Malgun Gothic,sans-serif;">▶ 다시하기</button></div>';}
+function tetrisRestartFromGameOver(){
+  try { window.parent.postMessage({type:'tetris_restart_click'}, '*'); } catch(e) {}
+  window.startGame();
+}
+window.tetrisRestartFromGameOver = tetrisRestartFromGameOver;
+
+function gameOver(){running=false;clearInterval(dropT);var el=document.getElementById('effect-overlay');el.style.pointerEvents='auto';el.innerHTML='<div class="effect-text" style="color:#ff4444;font-size:clamp(24px,5vw,38px);line-height:1.5;animation:none;opacity:1;background:rgba(5,10,25,.92);border-radius:14px;padding:28px 44px;border:1.5px solid #ff4444;">GAME OVER<br><span style="font-size:clamp(15px,3vw,22px);color:#ffe066;">Score: '+score.toLocaleString()+'</span><br><button onclick="window.tetrisRestartFromGameOver()" style="margin-top:14px;background:linear-gradient(135deg,#1a5ad0,#3a8aff);color:#fff;border:none;border-radius:8px;padding:11px 32px;font-size:15px;font-weight:800;cursor:pointer;font-family:Noto Sans KR,Malgun Gothic,sans-serif;">▶ 다시하기</button></div>';}
 
 function startGame(){
   try{
@@ -17877,7 +18110,10 @@ function startGame(){
 window.startGame=startGame;
 
 document.getElementById('start-btn').addEventListener('click',function(){startGame();});
-document.getElementById('btn-restart').addEventListener('click',function(){clearInterval(dropT);running=false;setTimeout(startGame,50);});
+document.getElementById('btn-restart').addEventListener('click',function(){
+  try { window.parent.postMessage({type:'tetris_restart_click'}, '*'); } catch(e) {}
+  clearInterval(dropT);running=false;setTimeout(startGame,50);
+});
 function togglePause(){if(!running)return;paused=!paused;document.getElementById('pause-overlay').style.display=paused?'flex':'none';document.getElementById('btn-pause').textContent=paused?'▶ 재개':'일시정지 ⏸';}
 document.getElementById('btn-pause').addEventListener('click',togglePause);
 document.getElementById('resume-btn').addEventListener('click',function(){paused=false;document.getElementById('pause-overlay').style.display='none';document.getElementById('btn-pause').textContent='일시정지 ⏸';});
@@ -17905,46 +18141,68 @@ mb('mb-rotate',function(){if(!running||paused)return;var r=rotateMat(cur.shape);
 </html>`;
 
 function TetrisGame({ onExit, chances, useChance }) {
-  const [usedChance, setUsedChance] = useState(false);
   const [iframeUrl, setIframeUrl] = useState(null);
 
-  // 컴포넌트 마운트 시 자동으로 도전권 차감하고 iframe URL 생성
+  // 컴포넌트 마운트 시 iframe URL 생성 (도전권은 차감하지 않음 — 다시 시작 클릭 시에만 차감)
   useEffect(() => {
-    if (chances <= 0 || usedChance) return;
-    if (useChance && !useChance()) return;
-    setUsedChance(true);
     const blob = new Blob([TETRIS_HTML], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     setIframeUrl(url);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Mission #4 (플레이 하기) — 첫 진입 시 1회 포인트 적립
+    if (typeof window.bumpMission === "function" && !window.__tetrisAwardedToday) {
+      window.bumpMission(4, 1);
+      window.__tetrisAwardedToday = true;
+    }
+    return () => { if (url) URL.revokeObjectURL(url); };
   }, []);
 
-  // 언마운트 시 Blob URL 정리
+  // iframe의 다시 하기 버튼 클릭 시 도전권 차감
   useEffect(() => {
-    return () => {
-      if (iframeUrl) URL.revokeObjectURL(iframeUrl);
+    const onMsg = (e) => {
+      if (e.data && e.data.type === 'tetris_restart_click') {
+        if (chances > 0 && useChance) {
+          useChance();
+        }
+      }
     };
-  }, [iframeUrl]);
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, [chances, useChance]);
 
   return (
     <div className="game-view tetris-game tetris-game-v87">
-      <GameHeader title="팡팡 테트리스" desc="핵심 단어가 있는 블록을 터뜨려주세요" chances={chances} onExit={onExit} />
+      <GameHeader title="팡팡 테트리스" desc="핵심 단어가 있는 블록을 터뜨려주세요" chances={chances} onExit={onExit} hideChances={true} />
 
-      {chances <= 0 && !iframeUrl && (
-        <div className="game-pre">
-          <p className="game-pre-desc">오늘 사용할 수 있는 도전권을 모두 사용했어요. 내일 다시 도전해 주세요!</p>
-        </div>
-      )}
+      <div className="ingame-chances-banner">
+        <span className="igc-label">남은 도전권</span>
+        <span className="igc-count">
+          <span className="igc-num">{chances}</span>
+          <span className="igc-slash">/</span>
+          <span className="igc-total">3</span>
+        </span>
+        {chances <= 0 && (
+          <span className="igc-warning">⏰ 오늘 도전권을 모두 사용했어요</span>
+        )}
+      </div>
 
       {iframeUrl && (
         <div className="tetris-layout-v87">
-          <div className="tetris-frame-wrap">
+          <div className="tetris-frame-wrap" style={{position: 'relative'}}>
             <iframe
               key={iframeUrl}
               className="tetris-iframe"
               src={iframeUrl}
               title="팡팡 테트리스"
             />
+            {chances <= 0 && (
+              <div className="game-disabled-overlay">
+                <div className="gdo-card">
+                  <div className="gdo-icon">⏰</div>
+                  <div className="gdo-title">오늘의 도전권을 모두 사용했어요</div>
+                  <div className="gdo-sub">내일 다시 도전해주세요!</div>
+                </div>
+              </div>
+            )}
           </div>
           <aside className="cw-rank-col cw-rank-col-v86">
             <h4>조직 랭킹 TOP 10</h4>
