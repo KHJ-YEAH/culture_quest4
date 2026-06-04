@@ -15728,6 +15728,13 @@ body {
   background: #080f1e;
 }
 
+/* V98 — iframe 안전장치: 어떤 환경에서도 최소 크기 보장 */
+.cw-iframe-v86,
+.tetris-iframe {
+  min-width: 280px;
+  min-height: 500px;
+}
+
 /* =========================================================
    V96 — 인게임 도전권 배너 (헤더 우측 도전권 카운터 대체)
    ========================================================= */
@@ -17616,20 +17623,14 @@ function CrosswordGame({ onExit, chances, useChance }) {
   const [usedChance, setUsedChance] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [iframeUrl, setIframeUrl] = useState(null);
   const [score, setScore] = useState(0);
 
-  // Mount: create iframe URL immediately so user can see the puzzle
+  // Mount: Mission #4 (플레이 하기) — 첫 진입 시 1회 포인트 적립
   useEffect(() => {
-    const blob = new Blob([CROSSWORD_HTML], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    setIframeUrl(url);
-    // Mission #4 (플레이 하기) — 첫 진입 시 1회 포인트 적립
     if (typeof window.bumpMission === "function" && !window.__crosswordAwardedToday) {
       window.bumpMission(4, 1);
       window.__crosswordAwardedToday = true;
     }
-    return () => URL.revokeObjectURL(url);
   }, []);
 
   // Timer tick
@@ -17733,14 +17734,12 @@ function CrosswordGame({ onExit, chances, useChance }) {
 
       <div className="cw-layout-v86">
         <div className="cw-iframe-col" style={{position: 'relative'}}>
-          {iframeUrl && (
-            <iframe
-              key={iframeUrl}
-              className="cw-iframe-v86"
-              src={iframeUrl}
-              title="컬처 가로세로"
-            />
-          )}
+          <iframe
+            className="cw-iframe-v86"
+            srcDoc={CROSSWORD_HTML}
+            title="컬처 가로세로"
+            sandbox="allow-scripts allow-same-origin"
+          />
           {chances <= 0 && (
             <div className="game-disabled-overlay">
               <div className="gdo-card">
@@ -18141,19 +18140,13 @@ mb('mb-rotate',function(){if(!running||paused)return;var r=rotateMat(cur.shape);
 </html>`;
 
 function TetrisGame({ onExit, chances, useChance }) {
-  const [iframeUrl, setIframeUrl] = useState(null);
 
-  // 컴포넌트 마운트 시 iframe URL 생성 (도전권은 차감하지 않음 — 다시 시작 클릭 시에만 차감)
+  // 컴포넌트 마운트 시 Mission 적립 (도전권은 차감하지 않음 — 다시 시작 클릭 시에만 차감)
   useEffect(() => {
-    const blob = new Blob([TETRIS_HTML], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    setIframeUrl(url);
-    // Mission #4 (플레이 하기) — 첫 진입 시 1회 포인트 적립
     if (typeof window.bumpMission === "function" && !window.__tetrisAwardedToday) {
       window.bumpMission(4, 1);
       window.__tetrisAwardedToday = true;
     }
-    return () => { if (url) URL.revokeObjectURL(url); };
   }, []);
 
   // iframe의 다시 하기 버튼 클릭 시 도전권 차감
@@ -18185,14 +18178,13 @@ function TetrisGame({ onExit, chances, useChance }) {
         )}
       </div>
 
-      {iframeUrl && (
-        <div className="tetris-layout-v87">
+      <div className="tetris-layout-v87">
           <div className="tetris-frame-wrap" style={{position: 'relative'}}>
             <iframe
-              key={iframeUrl}
               className="tetris-iframe"
-              src={iframeUrl}
+              srcDoc={TETRIS_HTML}
               title="팡팡 테트리스"
+              sandbox="allow-scripts allow-same-origin"
             />
             {chances <= 0 && (
               <div className="game-disabled-overlay">
@@ -18220,7 +18212,6 @@ function TetrisGame({ onExit, chances, useChance }) {
             </div>
           </aside>
         </div>
-      )}
     </div>
   );
 }
