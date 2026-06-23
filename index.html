@@ -3711,7 +3711,20 @@ input, textarea { font: inherit; }
 .mi-pts {
   font-size: 11.5px !important;
 }
-.mi-per { font-size: 10px !important; }
+.mi-per { font-size: 10px !important; color: var(--sun) !important; font-weight: 800 !important; }
+
+/* V107 — 이달의 미션: 제목 강조 음영(가장 중요한 위젯) */
+.card.mission .card-hd h3 {
+  display: inline-block !important;
+  padding: 5px 13px !important;
+  border-radius: 9px !important;
+  background: linear-gradient(135deg, var(--coral), var(--sun)) !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: .02em !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 90, 0.4) !important;
+}
 
 /* Widen side and reduce gaps */
 .layout {
@@ -7103,6 +7116,21 @@ input.white-input:focus,
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* V107 — 연속참여 요일 음영 톤다운 (이달의 미션 위젯 강조와 대비) */
+.streak-week .streak-day.done {
+  background: linear-gradient(135deg, rgba(255, 107, 90, 0.42), rgba(251, 191, 36, 0.40)) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+.streak-week .streak-day.today {
+  background: linear-gradient(135deg, rgba(255, 107, 90, 0.52), rgba(167, 139, 250, 0.46)) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 1.5px rgba(255, 107, 90, 0.45) !important;
+  animation: none !important;
+  font-weight: 700 !important;
 }
 
 /* =========================================================
@@ -12772,6 +12800,66 @@ body {
 }
 
 /* ------------------------------------------------------------------
+   V108 — 배너 재구성: 키워드+키메시지 한 줄(작게) + TALK/PLAY/RULE 안내(크게)
+   ------------------------------------------------------------------ */
+.hero.hero-v108 {
+  padding: 16px 28px 18px !important;
+}
+.hero-keyline-v108 {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.hero-kw-v108 {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--coral);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.hero-kw-div-v108 {
+  align-self: center;
+  width: 1px;
+  height: 13px;
+  background: rgba(45, 27, 61, 0.18);
+  flex-shrink: 0;
+}
+.hero-keymsg-v108 {
+  font-family: 'Noto Serif KR', var(--f-body);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.hero-guides-v108 {
+  margin-top: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.hero-guides-v108 .hg-line {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: -0.012em;
+  line-height: 1.5;
+}
+.hero-guides-v108 .hg-line b { color: var(--coral); font-weight: 800; }
+.hero-guides-v108 .hg-tag {
+  color: var(--coral);
+  font-weight: 900;
+  margin-right: 3px;
+  letter-spacing: 0.01em;
+}
+
+/* ------------------------------------------------------------------
    10) Streak — 큰 SVG 플레임 제거 후 컴팩트 "14일 + 작은 불꽃" 우측 정렬
    ------------------------------------------------------------------ */
 .streak-top-v60 {
@@ -16584,7 +16672,7 @@ function Members() {
             <span>우리의 메시지</span>
           </h2>
           <p style={{margin:"6px 0 0", fontSize:13.5, color:"var(--ink-3)", lineHeight:1.55}}>
-            성장하는 조직문화를 위한 한마디를 남겨주세요. 우리의 의견이 곧 일하는 방식이 됩니다.
+            성장하는 조직문화를 위한 한마디를 남겨주세요<span style={{fontSize:11}}>(30자 이상시 +P적립)</span>. 우리의 의견이 곧 일하는 방식이 됩니다.
           </p>
         </div>
         <button
@@ -17171,8 +17259,8 @@ h1{font-size:22px;font-weight:700;margin-bottom:6px;}
 /* ── 데이터 ── */
 const raw=[
   ['조','직','문','화','','','','','','','','','','',''],
-  ['','장','','','','책','임','감','','','','','인','',''],
-  ['','동','','','','임','','','','','','','성','',''],
+  ['','장','','','','책','임','감','','','','','','',''],
+  ['','동','','','','임','','','','','','인','성','',''],
   ['','료','','','','매','','','','','','','취','',''],
   ['','','','바','쁘','니','','심','리','적','안','전','감','',''],
   ['','','','','','저','','','','극','','','','',''],
@@ -17199,6 +17287,7 @@ const wordsA=[
   {id:8,  row:11, col:12, answer:'공감',         clue:'상대의 입장에서 마음을 헤아리며 "아, 진짜 힘들었겠다"가 먼저 나오는 것'},
   {id:9,  row:13, col:6,  answer:'굿리스너',     clue:\`귀를 여는 사람, 'good' 뒤에 '듣는 사람'을 영어로 붙이면 정답.\`},
   {id:21, row:4,  col:3,  answer:'바쁘니',       clue:'동기에게 연락할 일이 있을 때 시작하는 말'},
+  {id:22, row:2,  col:11, answer:'인성',         clue:'야근과 주말출근이 지속되면 급격히 바닥을 드러내는 것'},
 ];
 const wordsD=[
   {id:10, row:0,  col:1,  answer:'직장동료',   clue:'가족보다 자주 보는데 가족은 아닌 사람, 오늘 점심 뭐 먹을지 같이 고민하는 전우'},
@@ -17212,7 +17301,6 @@ const wordsD=[
   {id:18, row:9,  col:13, answer:'신뢰감',     clue:'서로 믿고 맡길 수 있는, "쟤한테 맡기면 된다"는 그 든든함'},
   {id:19, row:10, col:2,  answer:'세금계산서', clue:'회사 거래와 비용 처리에서 자주 만나는 증빙 문서'},
   {id:20, row:11, col:8,  answer:'업무스킬',   clue:'일을 더 잘하기 위해 필요한 실무 능력'},
-  {id:22, row:1,  col:12, answer:'인성',       clue:'야근과 주말출근이 지속되면 급격히 바닥을 드러내는 것'},
   {id:23, row:10, col:4,  answer:'인테리어',   clue:'공간에 취향을 입히는 작업'},
   {id:24, row:11, col:12, answer:'공동도급',   clue:'두 개 이상의 회사가 함께 공사를 수행하는 방식'},
 ];
@@ -18492,7 +18580,9 @@ function ProposalsList({ proposals, onLeaderSelect, leaderSelectedId, onUpdatePr
   const isLeader = D.user && D.user.isLeader;
 
   const toggleLike = (key) => {
-    setLikes({ ...likes, [key]: !likes[key] });
+    const wasLiked = !!likes[key];
+    setLikes({ ...likes, [key]: !wasLiked });
+    if (typeof window.bumpMission === "function") window.bumpMission(2, wasLiked ? -1 : 1);
   };
 
   const startEdit = (p) => {
@@ -20138,16 +20228,24 @@ function InteractiveShader() {
 
 function Hero() {
   return (
-    <div className="hero hero-v24 hero-v60">
-      <h1 className="hero-title">{D.quest.ko}</h1>
+    <div className="hero hero-v24 hero-v60 hero-v108">
       <div className="hero-row-v60">
-        <div className="hero-key-emphasis">폭넓게 정보를 공유하고 생각 차이를 인정합니다</div>
+        <div className="hero-keyline-v108">
+          <span className="hero-kw-v108">{D.quest.ko}</span>
+          <span className="hero-kw-div-v108" />
+          <span className="hero-keymsg-v108">폭넓게 정보를 공유하고 생각 차이를 인정합니다</span>
+        </div>
         <div className="hero-meta hero-meta-2col">
           <div className="m">
             <span className="l">PERIOD</span>
             <span className="v">{D.quest.period}</span>
           </div>
         </div>
+      </div>
+      <div className="hero-guides-v108">
+        <div className="hg-line"><b className="hg-tag">◆ TALK</b> : 먼저 <b>01 리더의 메시지</b>를 읽고, <b>02 우리의 메시지</b>를 작성해주세요~! 그리고, 공감가는 의견에 <b>'좋아요'</b> 꾹~ 눌러주세요!</div>
+        <div className="hg-line"><b className="hg-tag">◆ PLAY</b> : 3가지의 미니게임을 클리어 해주세요~</div>
+        <div className="hg-line"><b className="hg-tag">◆ RULE</b> : 공감수 높은 의견 Top3의 상세실천 방안을 작성하고, 최종 그라운드룰 확정!! 인증샷도 3장 이상 올리면 미션 클리어~!!</div>
       </div>
     </div>
   );
@@ -20344,8 +20442,8 @@ function App() {
       <div className="layout">
         <aside className="side" data-screen-label="Left Sidebar">
           <CharacterCard />
-          <StreakCard />
           <MissionCard />
+          <StreakCard />
         </aside>
 
         <main className="center" data-screen-label="Center Content">
