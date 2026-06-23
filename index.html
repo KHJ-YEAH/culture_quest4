@@ -3731,6 +3731,80 @@ input, textarea { font: inherit; }
   box-shadow: 0 4px 12px rgba(255, 107, 90, 0.4) !important;
 }
 
+/* V108 — Quest Clear 축하 오버레이 (7개 미션 전체 달성 시) */
+.quest-clear-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(18, 10, 36, 0.74);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  animation: qc-fade-in 0.4s ease;
+}
+.quest-clear-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.quest-clear-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  cursor: default;
+  padding: 20px;
+  animation: qc-pop 0.6s cubic-bezier(.18,.89,.32,1.28);
+}
+.qc-badge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  color: var(--sun);
+  margin-bottom: 14px;
+}
+.qc-title {
+  font-family: var(--f-display);
+  font-size: 76px;
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #FBBF24 0%, #FF6B5A 50%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 8px 26px rgba(255, 107, 90, 0.5));
+}
+.qc-sub {
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+.qc-close {
+  margin-top: 28px;
+  padding: 12px 42px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, var(--coral), var(--sun));
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -6px rgba(255, 107, 90, 0.6);
+  transition: transform 0.15s ease;
+}
+.qc-close:hover { transform: translateY(-1px) scale(1.02); }
+.qc-close:active { transform: scale(0.97); }
+@keyframes qc-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes qc-pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
 /* Widen side and reduce gaps */
 .layout {
   grid-template-columns: 280px minmax(0, 1fr) 280px !important;
@@ -17334,6 +17408,7 @@ function updateTimerDisplay(){
 function startTimer(){
   if(started||timeUp) return;
   started=true;
+  try{ parent.postMessage({type:'crossword_started'}, '*'); }catch(e){}
   document.getElementById('startBtn').disabled=true;
   document.getElementById('startBtn').textContent='진행 중…';
   document.getElementById('timeMsg').textContent='';
@@ -17808,13 +17883,7 @@ function CrosswordGame({ onExit, chances, useChance }) {
   const [completed, setCompleted] = useState(false);
   const [score, setScore] = useState(0);
 
-  // Mount: Mission #4 (플레이 하기) — 첫 진입 시 1회 포인트 적립
-  useEffect(() => {
-    if (typeof window.bumpMission === "function" && !window.__crosswordAwardedToday) {
-      window.bumpMission(4, 1);
-      window.__crosswordAwardedToday = true;
-    }
-  }, []);
+  // Mission #4 (플레이 하기)는 게임 내 '시작' 버튼을 눌렀을 때 적립됩니다 (아래 postMessage 핸들러 참고)
 
   // Timer tick
   useEffect(() => {
@@ -17839,6 +17908,13 @@ function CrosswordGame({ onExit, chances, useChance }) {
   useEffect(() => {
     const onMsg = (e) => {
       if (!e.data) return;
+      // 시작 버튼 클릭 — Mission #4 (플레이 하기) 1회 적립
+      if (e.data.type === 'crossword_started') {
+        if (typeof window.bumpMission === "function" && !window.__crosswordAwardedToday) {
+          window.bumpMission(4, 1);
+          window.__crosswordAwardedToday = true;
+        }
+      }
       // 완성 이벤트
       if (e.data.type === 'crossword_complete') {
         if (running && !finished) {
@@ -18239,6 +18315,7 @@ function startGame(){
     document.getElementById('kw-overlay').style.display='none';
     document.getElementById('pause-overlay').style.display='none';
     gameStarted=true;
+    try{ parent.postMessage({type:'tetris_started'}, '*'); }catch(e){}
     calcBS();
     grid=mkGrid();score=0;level=1;combo=0;kwIdx=0;bonus50kGiven=false;
     nxt3=[newPiece(),newPiece(),newPiece()];
@@ -18281,18 +18358,21 @@ mb('mb-rotate',function(){if(!running||paused)return;var r=rotateMat(cur.shape);
 
 function TetrisGame({ onExit, chances, useChance }) {
 
-  // 컴포넌트 마운트 시 Mission 적립 (도전권은 차감하지 않음 — 다시 시작 클릭 시에만 차감)
-  useEffect(() => {
-    if (typeof window.bumpMission === "function" && !window.__tetrisAwardedToday) {
-      window.bumpMission(4, 1);
-      window.__tetrisAwardedToday = true;
-    }
-  }, []);
+  // Mission #4 (플레이 하기)는 게임 내 '시작하기' 버튼을 눌렀을 때 적립됩니다 (아래 postMessage 핸들러 참고)
 
-  // iframe의 다시 하기 버튼 클릭 시 도전권 차감
+  // iframe의 시작/다시 하기 버튼 클릭 처리
   useEffect(() => {
     const onMsg = (e) => {
-      if (e.data && e.data.type === 'tetris_restart_click') {
+      if (!e.data) return;
+      // 시작하기 버튼 클릭 — Mission #4 (플레이 하기) 1회 적립
+      if (e.data.type === 'tetris_started') {
+        if (typeof window.bumpMission === "function" && !window.__tetrisAwardedToday) {
+          window.bumpMission(4, 1);
+          window.__tetrisAwardedToday = true;
+        }
+      }
+      // 다시 하기 버튼 클릭 시 도전권 차감
+      if (e.data.type === 'tetris_restart_click') {
         if (chances > 0 && useChance) {
           useChance();
         }
@@ -19527,9 +19607,88 @@ function StreakCard() {
   );
 }
 
+function QuestClearOverlay({ onClose }) {
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = canvas.clientWidth || window.innerWidth;
+    let H = canvas.height = canvas.clientHeight || window.innerHeight;
+    const onResize = () => { W = canvas.width = canvas.clientWidth || window.innerWidth; H = canvas.height = canvas.clientHeight || window.innerHeight; };
+    window.addEventListener('resize', onResize);
+
+    const palette = ['#FF6B5A','#FBBF24','#34D399','#A78BFA','#60A5FA','#F472B6','#FFFFFF'];
+    const particles = [];
+    const burst = (x, y) => {
+      const n = 64 + Math.floor(Math.random() * 46);
+      const base = palette[Math.floor(Math.random() * palette.length)];
+      for (let i = 0; i < n; i++) {
+        const ang = (Math.PI * 2 * i) / n + Math.random() * 0.35;
+        const spd = 2 + Math.random() * 5.5;
+        particles.push({
+          x, y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          life: 1,
+          color: Math.random() < 0.55 ? base : palette[Math.floor(Math.random() * palette.length)],
+          size: 1.8 + Math.random() * 2.4,
+        });
+      }
+    };
+
+    let frame = 0, rafId;
+    const tick = () => {
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+      if (frame % 16 === 0) burst(W * (0.12 + Math.random() * 0.76), H * (0.12 + Math.random() * 0.5));
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        p.vy += 0.06; p.vx *= 0.99; p.vy *= 0.99;
+        p.life -= 0.012;
+        if (p.life <= 0) { particles.splice(i, 1); continue; }
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      rafId = requestAnimationFrame(tick);
+    };
+    burst(W * 0.3, H * 0.34); burst(W * 0.7, H * 0.3); burst(W * 0.5, H * 0.44);
+    tick();
+
+    return () => { cancelAnimationFrame(rafId); window.removeEventListener('resize', onResize); };
+  }, []);
+
+  return (
+    <div className="quest-clear-overlay" onClick={onClose}>
+      <canvas ref={canvasRef} className="quest-clear-canvas" />
+      <div className="quest-clear-content" onClick={(e) => e.stopPropagation()}>
+        <div className="qc-badge">QUEST COMPLETE</div>
+        <div className="qc-title">Quest Clear!!</div>
+        <div className="qc-sub">7가지 미션을 모두 달성했어요 🎉</div>
+        <button className="qc-close" onClick={onClose}>확인</button>
+      </div>
+    </div>
+  );
+}
+
 function MissionCard() {
   const items = useMissions();
   const [bumpKey, setBumpKey] = useState({});
+  const [showClear, setShowClear] = useState(false);
+  const clearedRef = useRef(false);
+
+  const allDone = items.length > 0 && items.every(m => m.done);
+  useEffect(() => {
+    if (allDone && !clearedRef.current) {
+      clearedRef.current = true;
+      setShowClear(true);
+    }
+  }, [allDone]);
 
   useEffect(() => {
     const onUpd = (e) => {
@@ -19544,6 +19703,7 @@ function MissionCard() {
   const earned = items.reduce((s, m) => s + (m.accum ? m.accumPts : (m.done ? (m.fixed || 0) : 0)), 0);
 
   return (
+    <>
     <div className="card mission mission-list">
       <div className="card-hd" style={{padding:0, marginBottom:8}}>
         <h3>이달의 미션</h3>
@@ -19576,6 +19736,11 @@ function MissionCard() {
         })}
       </div>
     </div>
+    {showClear && ReactDOM.createPortal(
+      <QuestClearOverlay onClose={() => setShowClear(false)} />,
+      document.body
+    )}
+    </>
   );
 }
 
