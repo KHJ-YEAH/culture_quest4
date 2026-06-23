@@ -74,6 +74,7 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
+  zoom: 1.1;
   font-family: var(--f-body);
   background: var(--cream);
   color: var(--ink);
@@ -3714,6 +3715,10 @@ input, textarea { font: inherit; }
 .mi-per { font-size: 10px !important; color: var(--sun) !important; font-weight: 800 !important; }
 
 /* V107 — 이달의 미션: 제목 강조 음영(가장 중요한 위젯) */
+.card.mission {
+  border: 2px solid var(--sun) !important;
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.20), 0 8px 22px -10px rgba(251, 191, 36, 0.45) !important;
+}
 .card.mission .card-hd h3 {
   display: inline-block !important;
   padding: 5px 13px !important;
@@ -20243,7 +20248,7 @@ function Hero() {
         </div>
       </div>
       <div className="hero-guides-v108">
-        <div className="hg-line"><b className="hg-tag">◆ TALK</b> : 먼저 <b>01 리더의 메시지</b>를 읽고, <b>02 우리의 메시지</b>를 작성해주세요~! 그리고, 공감가는 의견에 <b>'좋아요'</b> 꾹~ 눌러주세요!</div>
+        <div className="hg-line"><b className="hg-tag">◆ TALK</b> : 먼저 <b>01 리더의 메시지</b>를 읽고, <b>02 우리의 메시지</b>를 작성해주세요~! 그리고 공감가는 의견에 <b>'좋아요'</b> 꾹~ 눌러주세요!</div>
         <div className="hg-line"><b className="hg-tag">◆ PLAY</b> : 3가지의 미니게임을 클리어 해주세요~</div>
         <div className="hg-line"><b className="hg-tag">◆ RULE</b> : 공감수 높은 의견 Top3의 상세실천 방안을 작성하고, 최종 그라운드룰 확정!! 인증샷도 3장 이상 올리면 미션 클리어~!!</div>
       </div>
